@@ -1,7 +1,7 @@
 // backend/server.js
 const express = require('express');
 const cors = require('cors');
-const { addUser, getUsers, verifyUser } = require('./db.js');
+const { addUser, getUsers, verifyUser, getQuestion, addQuestion } = require('./db.js');
 
 const app = express();
 const PORT = 3000;
@@ -15,6 +15,10 @@ app.get('/api/getUsers', (req, res) => {
   res.json(getUsers());
 });
 
+app.get('/api/getQuestion', (req, res) => {
+    res.json(getQuestion());
+  });
+
 app.post('/api/addUser', (req, res) => {
     const { name, email, password } = req.body;
     const result = addUser(name, email, password);
@@ -27,6 +31,28 @@ app.post('/api/addUser', (req, res) => {
       res.status(201).json({ success: true, id: result.lastInsertRowid });
     }
   });
+
+  app.post('/api/addQuestion', (req, res) => {
+    const { question, answer, difficulty, option1, option2, option3 } = req.body;
+
+    // Validate the incoming payload
+    if (!question || !answer || !difficulty || !option1 || !option2 || !option3) {
+        return res.status(400).json({ success: false, error: 'All fields are required' });
+    }
+
+    try {
+        const result = addQuestion(question, answer, difficulty, option1, option2, option3);
+
+        if (result.error) {
+            res.status(400).json({ success: false, error: result.error });
+        } else {
+            res.status(201).json({ success: true, id: result.lastInsertRowid });
+        }
+    } catch (error) {
+        console.error('Error in /api/addQuestion:', error);
+        res.status(500).json({ success: false, error: 'Internal Server Error' });
+    }
+});
 
 app.post('/api/login', (req, res) => {
     const { name, password } = req.body;
