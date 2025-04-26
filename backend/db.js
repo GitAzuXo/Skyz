@@ -60,15 +60,27 @@ function getUsers() {
   return db.prepare('SELECT * FROM users').all();
 }
 
-function getQuestion() {
-  return db.prepare('SELECT * FROM questions ORDER BY RANDOM() LIMIT 1;').all();
-}
+function getQuestions(limit, excludeIds = []) {
+	const placeholders = excludeIds.map(() => '?').join(', ');
+	const query = `
+	  SELECT * FROM questions
+	  ${excludeIds.length > 0 ? `WHERE id NOT IN (${placeholders})` : ''}
+	  ORDER BY RANDOM()
+	  LIMIT ?;
+	`;
+	return db.prepare(query).all(...excludeIds, limit);
+  }
+
+function saveScore(name, score) {
+  const stmt = db.prepare('UPDATE users SET score = ? WHERE name = ?');
+  return stmt.run(score, name);
+  }
 
 function verifyUser(name, password) {
-  const stmt = db.prepare('SELECT password FROM users WHERE name = ?');
+  const stmt = db.prepare('SELECT password, score FROM users WHERE name = ?');
   const user = stmt.get(name);
   if (user && bcrypt.compareSync(password, user.password)) {
-    return { success: true };
+    return { success: true, score: user.score };
   }
   return { success: false, error: 'Invalid credentials' };
 }
@@ -78,6 +90,7 @@ module.exports = {
   addUser,
   getUsers,
   verifyUser,
-  getQuestion,
-  addQuestion
+  getQuestions,
+  addQuestion,
+  saveScore
 };

@@ -13,6 +13,7 @@
     let option2 = '';
     let option3 = '';
     let difficulty = '';
+	let bestscore = 0;
     
     async function handleLogin(event) {
         event.preventDefault();
@@ -32,6 +33,7 @@
 
             if (response.ok && result.success) {
                 loggedInUser = result.user.name;
+				bestscore = result.score || 0;
                 errorMessage = '';
             } else {
                 errorMessage = result.message || 'Invalid username or password';
@@ -142,6 +144,7 @@
     
     {#if loggedInUser}
       <p>Welcome, {loggedInUser}!</p>
+	  <p>Your best score in the quiz: {bestscore}</p>
     {:else if errorMessage}
       <p style="color: red;">{errorMessage}</p>
     {/if}
