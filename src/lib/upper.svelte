@@ -49,10 +49,11 @@
 </style>
 
 <header>
-    <h1>Skyz</h1>
+    <a href="/" style="text-decoration: none; color: inherit;"><h1>Skyz</h1></a>
     <nav>
         <button on:click={() => navigate('/')}>Home</button>
         <button on:click={() => navigate('/quiz')}>Quiz</button>
         <button on:click={() => navigate('/login')}>Login/Register</button>
+
     </nav>
 </header>
