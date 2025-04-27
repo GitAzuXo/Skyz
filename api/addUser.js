@@ -1,4 +1,4 @@
-import { addUser } from '../lib/db';
+const { addUser } = require('../lib/db.js');
 
 export default function handler(req, res) {
   if (req.method !== 'POST') {

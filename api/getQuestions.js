@@ -1,4 +1,4 @@
-import { getQuestions } from '../lib/db';
+const { getQuestions } = require('../lib/db.js');
 
 export default function handler(req, res) {
   if (req.method !== 'POST') {

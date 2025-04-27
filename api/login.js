@@ -1,4 +1,4 @@
-import { verifyUser } from '../lib/db';
+const { verifyUser } = require('../lib/db.js');
 
 export default function handler(req, res) {
   if (req.method !== 'POST') {
