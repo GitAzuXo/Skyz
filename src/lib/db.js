@@ -1,6 +1,6 @@
 // lib/db.js
-const Database = require('better-sqlite3');
-const bcrypt = require('bcryptjs');
+import Database from 'better-sqlite3';
+import bcrypt from 'bcryptjs';
 
 const db = new Database('skyz.db', { verbose: console.log });
 

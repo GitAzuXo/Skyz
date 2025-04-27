@@ -1,4 +1,4 @@
-const { getUsers } = require('../lib/db.js');
+import { getUsers } from '../lib/db.js';
 
 export default function handler(req, res) {
   const users = getUsers();
