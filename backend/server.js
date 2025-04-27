@@ -1,7 +1,7 @@
 // backend/server.js
 const express = require('express');
 const cors = require('cors');
-const { addUser, getUsers, verifyUser, getQuestions, addQuestion, saveScore } = require('./db.js');
+const { addUser, getUsers, verifyUser, getQuestions, addQuestion, saveScore, deleteUser } = require('./db.js');
 
 const app = express();
 const PORT = 3000;
@@ -83,6 +83,17 @@ app.post('/api/addUser', (req, res) => {
         res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
 });
+
+app.delete('/api/deleteUser/:id', (req, res) => {
+	const { id } = req.params;
+	const result = deleteUser(id);
+  
+	if (result.error) {
+	  res.status(400).json({ success: false, error: result.error });
+	} else {
+	  res.status(200).json({ success: true });
+	}
+  });
 
 app.post('/api/login', (req, res) => {
     const { name, password } = req.body;

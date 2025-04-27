@@ -85,6 +85,11 @@ function verifyUser(name, password) {
   return { success: false, error: 'Invalid credentials' };
 }
 
+function deleteUser(id) {
+  const stmt = db.prepare('DELETE FROM users WHERE id = ?');
+  return stmt.run(id);
+}
+
 // Export functions
 module.exports = {
   addUser,
@@ -92,5 +97,6 @@ module.exports = {
   verifyUser,
   getQuestions,
   addQuestion,
-  saveScore
+  saveScore,
+  deleteUser
 };

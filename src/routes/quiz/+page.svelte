@@ -15,7 +15,7 @@
     let message = '';
     let selectedOption = null;
     let isDisabled = false;
-	let number = 3;
+	let number = 5;
 	let showLoginPrompt = false;
 	let username = '';
 	let password = '';

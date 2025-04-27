@@ -16,6 +16,34 @@
     let option3 = '';
     let difficulty = '';
 	let bestscore = 0;
+	let users = [];
+
+	async function fetchUsers() {
+        try {
+            const response = await fetch('http://localhost:3000/api/getUsers');
+            if (!response.ok) {
+                throw new Error('Failed to fetch users');
+            }
+            users = await response.json();
+        } catch (error) {
+            console.error('Error fetching users:', error);
+        }
+    }
+
+	async function deleteUser(userId) {
+        try {
+            const response = await fetch(`http://localhost:3000/api/deleteUser/${userId}`, {
+                method: 'DELETE',
+            });
+            if (!response.ok) {
+                throw new Error('Failed to delete user');
+            }
+            alert('User deleted successfully!');
+            fetchUsers(); // Refresh the user list
+        } catch (error) {
+            console.error('Error deleting user:', error);
+        }
+    }
     
     async function handleLogin(event) {
         event.preventDefault();
@@ -37,6 +65,9 @@
                 loggedInUser = result.user.name;
 				bestscore = result.score || 0;
                 errorMessage = '';
+				if (loggedInUser === 'Admin') {
+                    fetchUsers();
+                }
             } else {
                 errorMessage = result.message || 'Invalid username or password';
                 loggedInUser = null;
@@ -197,7 +228,66 @@
         </form>
     {/if}
 
+	{#if loggedInUser == 'Admin'}
+	<div class="table-container">
+		<table>
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Username</th>
+					<th>Email</th>
+					<th>Best Score</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{#each users as user}
+					<tr>
+						<td>{user.id}</td>
+						<td>{user.name}</td>
+						<td>{user.email}</td>
+						<td>{user.score}</td>
+						<td>
+							<button on:click={() => deleteUser(user.id)}>Delete</button>
+						</td>
+					</tr>
+				{/each}
+			</tbody>
+		</table>
+	</div>
+	{/if}
 <style>
+
+.table-container {
+        display: flex;
+        justify-content: center;
+        margin: 20px auto;
+    }
+
+table {
+        width: 50%;
+        border-collapse: collapse;
+        margin: 20px 0;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #3d3d3d;
+        color: white;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    tr:hover {
+        background-color: #4f4a4a;
+    }
 
 h2 {
         text-align: center;
