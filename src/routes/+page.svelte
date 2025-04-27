@@ -1,9 +1,5 @@
 <Upper />
 
-<svelte:head>
-	<script src="https://unpkg.com/website-carbon-badges@1.1.3/b.min.js" defer></script>
-</svelte:head>
-
 <script>
     import Upper from '$lib/upper.svelte';
 </script>
@@ -89,7 +85,4 @@
 <footer>
     <p>Created with love for the planet. 🌍</p>
 </footer>
-
-<div id="wcb" class="carbonbadge wcb-d"></div>
-
   
