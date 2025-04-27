@@ -1,4 +1,4 @@
-import { addQuestion } from '../lib/db.js';
+import { addQuestion } from '../src/lib/db.js';
 
 export default function handler(req, res) {
   if (req.method !== 'POST') {
