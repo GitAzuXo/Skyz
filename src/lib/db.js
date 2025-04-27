@@ -27,7 +27,7 @@ db.prepare(`
 `).run();
 
 // Functions
-function addUser(name, email, password) {
+export function addUser(name, email, password) {
   const stmt = db.prepare('SELECT email FROM users WHERE email = ?');
   if (stmt.get(email)) {
     return { error: 'Email already exists' };
@@ -38,7 +38,7 @@ function addUser(name, email, password) {
   }
 }
 
-function addQuestion(question, answer, difficulty, option1, option2, option3) {
+export function addQuestion(question, answer, difficulty, option1, option2, option3) {
   const stmt = db.prepare('SELECT text FROM questions WHERE text = ?');
   if (stmt.get(question)) {
     return { error: 'Question already exists' };
@@ -53,11 +53,11 @@ function addQuestion(question, answer, difficulty, option1, option2, option3) {
   }
 }
 
-function getUsers() {
+export function getUsers() {
   return db.prepare('SELECT * FROM users').all();
 }
 
-function getQuestions(limit, excludeIds = []) {
+export function getQuestions(limit, excludeIds = []) {
   const placeholders = excludeIds.map(() => '?').join(', ');
   const query = `
     SELECT * FROM questions
@@ -68,12 +68,12 @@ function getQuestions(limit, excludeIds = []) {
   return db.prepare(query).all(...excludeIds, limit);
 }
 
-function saveScore(name, score) {
+export function saveScore(name, score) {
   const stmt = db.prepare('UPDATE users SET score = ? WHERE name = ?');
   return stmt.run(score, name);
 }
 
-function verifyUser(name, password) {
+export function verifyUser(name, password) {
   const stmt = db.prepare('SELECT password, score FROM users WHERE name = ?');
   const user = stmt.get(name);
   if (user && bcrypt.compareSync(password, user.password)) {
@@ -81,12 +81,3 @@ function verifyUser(name, password) {
   }
   return { success: false, error: 'Invalid credentials' };
 }
-
-module.exports = {
-  addUser,
-  getUsers,
-  verifyUser,
-  getQuestions,
-  addQuestion,
-  saveScore
-};
