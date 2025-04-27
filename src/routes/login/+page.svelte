@@ -281,10 +281,6 @@ table {
         color: white;
     }
 
-    tr:nth-child(even) {
-        background-color: #f2f2f2;
-    }
-
     tr:hover {
         background-color: #4f4a4a;
     }
