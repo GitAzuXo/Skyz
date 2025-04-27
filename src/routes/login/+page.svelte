@@ -1,5 +1,7 @@
 <script>
     // @ts-nocheck
+
+	import Upper from "$lib/upper.svelte";
     
     let username = '';
     let password = '';
@@ -130,6 +132,8 @@
     }
 }
     </script>
+
+	<Upper />
     
     <h2>Login</h2>
     <form on:submit|preventDefault={handleLogin}>
@@ -192,3 +196,69 @@
             <button type="submit">Add Question</button>
         </form>
     {/if}
+
+<style>
+
+h2 {
+        text-align: center;
+        color: #ffffff;
+    }
+
+    form {
+        background: #3d3d3d;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        margin: 20px auto;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #ffffff;
+    }
+
+    input {
+        width: 94.5%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+		background-color: #1b1a1a;
+		color: white;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        background-color: #5a6266;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    p {
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    p[style="color: red;"] {
+        color: red;
+        font-weight: bold;
+    }
+
+    p[style="color: green;"] {
+        color: green;
+        font-weight: bold;
+    }
+
+</style>
