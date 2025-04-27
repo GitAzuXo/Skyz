@@ -1,10 +1,9 @@
-// backend/db.js (CommonJS-compatible version)
+// lib/db.js
 const Database = require('better-sqlite3');
 const bcrypt = require('bcryptjs');
 
 const db = new Database('skyz.db', { verbose: console.log });
 
-// Créer la table si elle n'existe pas
 db.prepare(`
   CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -30,7 +29,6 @@ db.prepare(`
 // Functions
 function addUser(name, email, password) {
   const stmt = db.prepare('SELECT email FROM users WHERE email = ?');
-
   if (stmt.get(email)) {
     return { error: 'Email already exists' };
   } else {
@@ -42,17 +40,16 @@ function addUser(name, email, password) {
 
 function addQuestion(question, answer, difficulty, option1, option2, option3) {
   const stmt = db.prepare('SELECT text FROM questions WHERE text = ?');
-
   if (stmt.get(question)) {
-      return { error: 'Question already exists' };
+    return { error: 'Question already exists' };
   } else {
-      try {
-          const insertStmt = db.prepare('INSERT INTO questions (text, answer, difficulty, option1, option2, option3) VALUES (?, ?, ?, ?, ?, ?)');
-          return insertStmt.run(question, answer, difficulty, option1, option2, option3);
-      } catch (error) {
-          console.error('Database error in addQuestion:', error);
-          throw error;
-      }
+    try {
+      const insertStmt = db.prepare('INSERT INTO questions (text, answer, difficulty, option1, option2, option3) VALUES (?, ?, ?, ?, ?, ?)');
+      return insertStmt.run(question, answer, difficulty, option1, option2, option3);
+    } catch (error) {
+      console.error('Database error in addQuestion:', error);
+      throw error;
+    }
   }
 }
 
@@ -61,20 +58,20 @@ function getUsers() {
 }
 
 function getQuestions(limit, excludeIds = []) {
-	const placeholders = excludeIds.map(() => '?').join(', ');
-	const query = `
-	  SELECT * FROM questions
-	  ${excludeIds.length > 0 ? `WHERE id NOT IN (${placeholders})` : ''}
-	  ORDER BY RANDOM()
-	  LIMIT ?;
-	`;
-	return db.prepare(query).all(...excludeIds, limit);
-  }
+  const placeholders = excludeIds.map(() => '?').join(', ');
+  const query = `
+    SELECT * FROM questions
+    ${excludeIds.length > 0 ? `WHERE id NOT IN (${placeholders})` : ''}
+    ORDER BY RANDOM()
+    LIMIT ?;
+  `;
+  return db.prepare(query).all(...excludeIds, limit);
+}
 
 function saveScore(name, score) {
   const stmt = db.prepare('UPDATE users SET score = ? WHERE name = ?');
   return stmt.run(score, name);
-  }
+}
 
 function verifyUser(name, password) {
   const stmt = db.prepare('SELECT password, score FROM users WHERE name = ?');
@@ -85,7 +82,6 @@ function verifyUser(name, password) {
   return { success: false, error: 'Invalid credentials' };
 }
 
-// Export functions
 module.exports = {
   addUser,
   getUsers,
